@@ -1,18 +1,13 @@
 import React, {useState} from 'react'
-import {useForm, useFieldArray} from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {dataHouseConstructor} from "../utils/functionFactory"
 import { notify } from '../utils/toast';
 
 function Main() {
-    const [loading, setLoading] = useState(false);
     const {
         handleSubmit,
         register, 
         reset, 
-        setValue, 
-        getValues,
-        watch,
-        control,
         formState: {errors},
         } = useForm({
             defaultValues: {
@@ -25,31 +20,25 @@ function Main() {
             shouldUnregister: false,
         });
 
-    const formData = watch();
-    const {fields, append, remove} = useFieldArray({
-        control,
-        name: "DataHouse",
-    });
-
-    console.log("fields",fields);
-    
+ 
     const onSubmit = (data) => {
         const dataHouse = dataHouseConstructor(data);
         console.log("dataHouse =>",dataHouse)
-        setLoading(true);
         try {
             reset();
             notify("Votre requète s'est executée avec succès", "success");
-
+            console.log("success")
+            
         } catch (error) {
             notify("Une erreur est survenue", "error")
+            console.log("error")
         }
         setLoading(false);
     }
     
   return (
     <div className="flex flex-col items-center justify-center space-y-8">
-        <h3 className="text-gray-900 text-xl font-medium">Ajout d'un nouveau logement</h3>
+        <h3 className="text-gray-900 text-xl font-medium">Ajout d&apos; un nouveau logement</h3>
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 {/* field 1  */}
@@ -101,7 +90,7 @@ function Main() {
                     <input 
                         type={"number"} 
                         placeholder="entrer le numero " 
-                        {...register('numHouse', { required: "champs requis"})}
+                        {...register('numHouse', {min: { value: 1, message: 'Entrer une valeur positive'}})}
                         className="w-full py-2 px-6 border-2 border-gray-200 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500
                         sm:w-80 placeholder:text-xs placeholder:text-gray-400"
                     />
@@ -115,7 +104,7 @@ function Main() {
                     <input 
                         type={"number"} 
                         placeholder="0.0 GNF" 
-                        {...register('price', { required: "champs requis"})}
+                        {...register('price', {min: { value: 1, message: 'Entrer une valeur positive'}})}
                         className="w-full py-2 px-6 border-2 border-gray-200 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500
                         sm:w-80 placeholder:text-xs placeholder:text-gray-400"
                     />
@@ -129,7 +118,7 @@ function Main() {
                 <input 
                     type={"number"} 
                     placeholder="Nombre de mois d'avance" 
-                    {...register('advance', { required: "champs requis"})}
+                    {...register('advance', {min: { value: 1, message: 'Entrer une valeur positive'}})}
                     className="w-full py-2 px-6 border-2 border-gray-200 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500
                     sm:w-80 placeholder:text-xs placeholder:text-gray-400"
                 />
@@ -143,7 +132,7 @@ function Main() {
                 <input 
                     type={"number"} 
                     placeholder="entrer le nombre de chambre" 
-                    {...register('bedroom', { required: "champs requis"})}
+                    {...register('bedroom', {min: { value: 1, message: 'Entrer une valeur positive'}})}
                     className="w-full py-2 px-6 border-2 border-gray-200 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500
                     sm:w-80 placeholder:text-xs placeholder:text-gray-400"
                 />
@@ -157,7 +146,16 @@ function Main() {
                 <input 
                     type={"number"} 
                     placeholder="donner une note (1 à 5)" 
-                    {...register('rating', { required: "champs requis"})}
+                    {...register('rating', {
+                        max: {
+                            value: 5,
+                            message: 'Entrer une valeur inferieur 5'
+                        },
+                        min: {
+                            value: 1,
+                            message: 'Entrer une valeur superieur 1'
+                        }
+                    })}
                     className="w-full py-2 px-6 border-2 border-gray-200 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500
                     sm:w-80 placeholder:text-xs placeholder:text-gray-400"
                 />

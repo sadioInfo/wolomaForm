@@ -1,4 +1,4 @@
-import toast, { Toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import {RiNotification3Fill} from "react-icons/ri"
 
 export const notify = (
